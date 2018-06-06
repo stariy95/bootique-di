@@ -108,7 +108,12 @@ public class InjectorAdapter implements com.google.inject.Injector {
 
             @Override
             public Provider<T> getProvider() {
-                return () -> bootiqueBinding.getScoped().get();
+                return () -> {
+                    if(bootiqueBinding.getOriginal() == null) {
+                        return bootiqueInjector.getProvider(bootiqueBinding.getKey()).get();
+                    }
+                    return bootiqueBinding.getScoped().get();
+                };
             }
         };
     }
